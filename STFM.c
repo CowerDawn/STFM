@@ -236,6 +236,17 @@ void create_text_file() {
     usleep(1000000);
 }
 
+void open_file_in_editor(const char *path) {
+    pid_t pid = fork();
+    if (pid == 0) {
+        execlp("nano", "nano", path, NULL);
+        execlp("vim", "vim", path, NULL);
+        exit(EXIT_FAILURE);
+    } else if (pid < 0) {
+        perror("Fork failed");
+    }
+}
+
 void handle_input() {
     int ch = getch();
     switch (ch) {
@@ -331,6 +342,51 @@ void handle_input() {
             break;
         case 'S':
             create_text_file();
+            break;
+        case 'E':
+            if (!files[current_index].is_dir) {
+                char full_path[MAX_FILENAME_LENGTH];
+                snprintf(full_path, sizeof(full_path), "%s/%s", current_path, files[current_index].name);
+                open_file_in_editor(full_path);
+            }
+            break;
+        case KEY_F(1):
+            create_text_file();
+            break;
+        case KEY_F(2):
+            create_directory();
+            break;
+        case KEY_F(3):
+            delete_file_or_directory();
+            break;
+        case KEY_F(4):
+            if (!files[current_index].is_dir) {
+                char full_path[MAX_FILENAME_LENGTH];
+                snprintf(full_path, sizeof(full_path), "%s/%s", current_path, files[current_index].name);
+                open_file_in_editor(full_path);
+            }
+            break;
+        case KEY_PPAGE:
+            current_page--;
+            if (current_page < 0) {
+                current_page = 0;
+            }
+            current_index = current_page * FILES_PER_PAGE;
+            break;
+        case KEY_NPAGE:
+            current_page++;
+            if (current_page * FILES_PER_PAGE >= file_count) {
+                current_page = (file_count - 1) / FILES_PER_PAGE;
+            }
+            current_index = current_page * FILES_PER_PAGE;
+            break;
+        case KEY_HOME:
+            current_index = 0;
+            current_page = 0;
+            break;
+        case KEY_END:
+            current_index = file_count - 1;
+            current_page = (file_count - 1) / FILES_PER_PAGE;
             break;
     }
 }
