@@ -1,15 +1,20 @@
+TARGET = STFM
+SRCS = STFM.c
+OBJS = $(SRCS:.c=.o)
 CC = gcc
-CFLAGS = -Wall -Wextra -std=c99
-TARGET = stfm
-PYTHON = python3
+CFLAGS = -Wall -Wextra -g -Wno-format-truncation
+LDFLAGS = -lncurses
 
-all: $(TARGET) run_sgfm
+all: $(TARGET)
 
-$(TARGET): STFM.c
-	$(CC) $(CFLAGS) -o $(TARGET) STFM.c
+$(TARGET): $(OBJS)
+	$(CC) $(OBJS) -o $(TARGET) $(LDFLAGS)
 
-run_sgfm: SGFM.py
-	$(PYTHON) SGFM.py
+%.o: %.c
+	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-	rm -f $(TARGET)
+	rm -f $(OBJS) $(TARGET)
+
+run: $(TARGET)
+	./$(TARGET)
