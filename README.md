@@ -1,6 +1,6 @@
 # STFM
 
-STFM - GNU simple terminal file manager for Unix-like system. It is made for the WM-IT window manager emulator.
+STFM - GNU simple terminal file managment for Unix-like system. It is made for the WM-IT window manager emulator.
 
 Activate the SGFM.py script if you want your own file manager with a GUI.
 
@@ -40,3 +40,8 @@ Ctrl + O: Opens the selected file with the default application.
 
 Ctrl + Q: Exits the file manager.
 
+
+
+
+
+да он же соливой нахуй
